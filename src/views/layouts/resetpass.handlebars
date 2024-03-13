@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Please provide a new password</h2>
+      <form action="/api/sessions/restore/{{cid}}" method="post">
+        <input id="password" name="password" type="password" pattern="^\S{5,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Must have at least 5 characters' : ''); if(this.checkValidity()) form.password_two.pattern = this.value;" placeholder="Password" required>
+        <input id="password_two" name="password_two" type="password" pattern="^\S{5,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Both passwords must match' : '');" placeholder="Verify Password" required>
+        <input type="submit" value="Recovery" />
+      </form>
+    </div>
+  </div>
+  <form  action="/" method ="get">
+    <button type="submit">Go back</button>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/reset_index.js"></script>
+<link rel="stylesheet" href="/css/styles.css">
+

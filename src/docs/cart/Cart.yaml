@@ -1,0 +1,153 @@
+openapi: "3.0.1"
+info:
+  title: API Carts
+  version: "1.0.0"
+
+paths:
+  /api/cart:
+    get:
+      summary: Gets information of the current user session Cart [Must me logged in] and redirects to the id respected
+      tags:
+      - Carts
+      responses:
+        "200":
+          description: Redirects to /api/cart/{cid}
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Get_cart"
+  
+  /api/cart/{cid}:
+    get:
+      summary: Gets the cid from the api/cart endpoint, looks for the id of the user requested and brings the items in its Cart
+      tags:
+      - Carts
+      parameters:
+        - UserId: cid
+          in: path
+          required: true
+          description: id of the user to find its Cart
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Cart found rendering items
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/cid"
+        "500":
+          description: Error of finding the id of the user, it might not exist
+  
+  /api/cart/{cid}/payment:
+    get:
+      summary: Must be logged. This endpoint displays the item in the cart that are going to be paid and redirects to the tiket endpoint if requested
+      tags:
+      - Carts
+      responses:
+        "200":
+          description: Id with cart found, displaying items list that can be paid
+          content:
+            application/json:
+              schema:
+                  $ref: "#components/schemas/CID_PAYMENT"
+        "500":
+          description: Error finding the id of the user with the cart /acess denided
+
+
+components:
+  schemas:
+    Get_cart:
+      type: object
+      properties:
+        current_id:
+          type: string
+          description: User id that will be used to redirect in to the /api/cart/uid
+      
+      example:
+        current_id: safbh2398rfb1971234bf
+    
+    cid:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id of the current user
+        username:
+          type: string
+          description: Username of current user
+        total:
+          type: number
+          description: amount to pay of items that are in the current Cart
+        products:
+          type: object
+          description: objects inside the Cart
+          properties:
+            products:
+              type: string
+              description: Id of the product
+            name:
+              type: string
+              description: name of the item in the Cart
+            thumbnail:
+              type: string
+              description: link to the icon of the item in the Cart
+            price:
+              type: string 
+              description: cost of the item in the Cart
+            quanity:
+              type: string
+              description: amount of the item in the Cart
+      example:
+        _id: new ObjectId('65a8707aab708a6a006566b9')
+        username: DUMMY
+        total: 100
+        products: 
+            product: new ObjectId('655ad8f7722b6a7038684bcb')
+            name: Leaf
+            thumbnail: https://dodo.ac/np/images/a/af/Leaf_NH_Icon.png
+            price: 100
+            quantity: 1
+
+    CID_PAYMENT:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id of the current user to pay
+        username:
+          type: string
+          description: Username of current user to pay
+        total:
+          type: number
+          description: amount to pay of items that are in the current Cart to pay
+        products:
+          type: object
+          description: objects inside the Cart that will be bought
+          properties:
+            products:
+              type: string
+              description: Id of the product
+            name:
+              type: string
+              description: name of the item in the Cart
+            thumbnail:
+              type: string
+              description: link to the icon of the item in the Cart
+            price:
+              type: string 
+              description: cost of the item in the Cart
+            quanity:
+              type: string
+              description: amount of the item in the Cart
+
+      example:
+        _id: new ObjectId('65a8707aab708a6a006566b9')
+        username: DUMMY
+        total: 3000
+        products: 
+          product: new ObjectId('655b8315a7705314057a7f84')
+          name: SoftServe Lamp
+          thumbnail: https://dodo.ac/np/images/7/78/Soft-Serve_Lamp_%28Vanilla%29_NH_Icon.png
+          price: 3000
+          quantity: 1

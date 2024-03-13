@@ -1,0 +1,425 @@
+openapi: "3.0.1"
+info:
+  title: API Products
+  version: "1.0.0"
+
+paths:
+  /api/products/:
+    get:
+      summary: Gets all the products inside the database
+      tags:
+        - Products
+      responses:
+        "200":
+          description: All items shown in a paginator format
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Products"
+
+
+    post:
+    
+      summary: loads a new item to the database
+      tags:
+        - Products
+      responses:
+        "200":
+          description: New item added to database
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/postProduct"
+        "500":
+          description: acess denied or error adding new items, returns to the latest endpoint
+
+  /api/products/{id}:
+    get:
+      summary: Gets an item by its id
+      tags:
+      - Products
+      parameters:
+        - id: id
+          in: path
+          required: true
+          description: Id of the item
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Product with id requested found
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/ProdID"
+
+  /api/products/edit_items:
+    get:
+      summary: endpoint that sends the current database to be rendered in a page 
+      tags:
+        - Products
+      responses:
+        "200":
+          description: sends to the handebars the information to be rendered in form of an Array
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Edit_product"
+    
+    post:
+      summary: Endpoint that either Updates, Creates or Deletes an item from the database
+      tags:
+        - Products
+      responses:
+        "200":
+          description: It sends to the database the request for update delete or add a new item
+          content:
+            schema:
+              $ref: "#components/schemas/PostEdit_product"
+        "500":
+          description: Either doesnt have the rights to delete or update an item or the request had the wrong ID
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        docs:
+          type: object
+          description: Array that contains the info of available products
+          properties:
+            _id:
+              type: string
+              description: id of mongo object
+            title:
+              type: string
+              description: name of item sold
+            description:
+              type: string
+              description: brief info about item
+            code:
+              type: string
+              description: internal code of item
+            price:
+              type: number
+              description: price of item
+            stock:
+              type: number
+              description: amount of item
+            category:
+              type: string
+              description: internal code of the catogery of item
+            thumbnail: 
+              type: string
+              description: img of the item
+            visible:
+              type: boolean
+              description: conditional to show the item in the page
+            owner:
+              type: string
+              description: name of the user selling the item
+        
+        totalDocs:
+          type: numeber
+          description: amount of pages of documetts
+        limit:
+          type: number
+          description: limit of items shown per page
+        totalPages:
+          type: number
+          description: amount of pages
+        page:
+          type: number
+          description: current page
+        pagingCounter:
+          type: number
+          description: current page number
+        hasPrevPage:
+          type: boolean
+          description: conditional if has prev page 
+        hasNextPage:
+          type: boolean
+          description: conditional if it has prev page
+        PrevPage:
+          type: number
+          description: number of prev page
+        nextPage:
+          type: number
+          description: number of next page
+        prevlink:
+          type: string
+          description: link to the prev page
+        nextLink:
+          type: string
+          description: link to the next page
+        isValid:
+          type: boolean
+          description: validator of items in list
+        
+        current_user:
+          type: object
+          description: object showing current user info
+        isAdmin:
+          type: boolean
+          description: boolean of checker of admin rights
+      example:
+          current_user:
+            email: somerandom@gmail.com
+            role: USER
+          isAdmin: FALSE
+          docs:
+            _id: objectId("osanfoisadnfoisadnfoi")
+            title: cheese
+            description: mmmm cheese
+            code: CHSS
+            price: 9999
+            stock: 0
+            catogery: objectId("fh2q9hfewhfwefqfe")
+            thumbnail: 'https://dodo.ac/np/images/5/58/Study_Chair_%28Natural_-_Yellow%29_NH_Icon.png'
+            visible: false
+            owner: nobody
+          totalDocs: 17
+          limit: 10
+          totalPages: 2
+          page: 1
+          pagingCounter: 1
+          hasPrevPage: false
+          hasNextPage: true
+          prevPage: null
+          nextPage: 2
+          prevLink: ''
+          nextLink: 'http://localhost:3000/api/products/?page=2'
+          isValid: true
+
+    postProduct:
+      type: object
+      summary: adds a new product
+      properties:
+        _id:
+          type: string
+          description: id of item
+        title: 
+          type: string
+          description: Name of the item
+        description:
+          type: string
+          description: Information about the object
+        owner:
+          type: string
+          description: information about the seller
+        price:
+          type: number
+          description: price of the item
+        stock:
+          type: number
+          description: amount of items added
+        category:
+          type: string
+          description: identifier of the category of the item
+        thumbnail:
+          type: string
+          description: link to the image of the item
+        visible:
+          type: boolean
+          description: Checker if item should be displayed 
+      example:
+          _id: objectId("osanfoisadnfoisadnfoi")
+          title: cheese
+          description: mmmm cheese
+          owner: nobody
+          code: CHSS
+          price: 9999
+          stock: 0
+          catogery: objectId("fh2q9hfewhfwefqfe")
+          thumbnail: 'https://dodo.ac/np/images/5/58/Study_Chair_%28Natural_-_Yellow%29_NH_Icon.png'
+          visible: false
+
+    ProdID:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: id of item
+        title: 
+          type: string
+          description: Name of the item
+        description:
+          type: string
+          description: Information about the object
+        owner:
+          type: string
+          description: information about the seller
+        price:
+          type: number
+          description: price of the item
+        stock:
+          type: number
+          description: amount of items in stock
+        category:
+          type: string
+          description: identifier of the category of the item
+        thumbnail:
+          type: string
+          description: link to the image of the item
+        visible:
+          type: boolean
+          description: Checker if item should be displayed 
+      example:
+        _id: objectId("osanfoisadnfoisadnfoi")
+        title: cheese
+        description: mmmm cheese
+        code: CHSS
+        price: 9999
+        stock: 0
+        catogery: objectId("fh2q9hfewhfwefqfe")
+        thumbnail: 'https://dodo.ac/np/images/5/58/Study_Chair_%28Natural_-_Yellow%29_NH_Icon.png'
+        visible: false
+        owner: nobody
+
+    Edit_product:
+      type: object
+      properties:
+        docs:
+          type: object
+          description: Array that contains the info of all products in database
+          properties:
+            _id:
+              type: string
+              description: id of mongo object
+            title:
+              type: string
+              description: name of item sold
+            description:
+              type: string
+              description: brief info about item
+            code:
+              type: string
+              description: internal code of item
+            price:
+              type: number
+              description: price of item
+            stock:
+              type: number
+              description: amount of item
+            category:
+              type: string
+              description: internal code of the catogery of item
+            thumbnail: 
+              type: string
+              description: img of the item
+            visible:
+              type: boolean
+              description: conditional to show the item in the page
+            owner:
+              type: string
+              description: name of the user selling the item
+        
+        totalDocs:
+          type: numeber
+          description: amount of pages of documetts
+        limit:
+          type: number
+          description: limit of items shown per page
+        totalPages:
+          type: number
+          description: amount of pages
+        page:
+          type: number
+          description: current page
+        pagingCounter:
+          type: number
+          description: current page number
+        hasPrevPage:
+          type: boolean
+          description: conditional if has prev page 
+        hasNextPage:
+          type: boolean
+          description: conditional if it has prev page
+        PrevPage:
+          type: number
+          description: number of prev page
+        nextPage:
+          type: number
+          description: number of next page
+        prevlink:
+          type: string
+          description: link to the prev page
+        nextLink:
+          type: string
+          description: link to the next page
+        isValid:
+          type: boolean
+          description: validator of items in list
+        
+        current_user:
+          type: object
+          description: object showing current user info
+
+      example:
+        current_user:
+          email: somerandom@gmail.com
+          role: USER
+        docs:
+          _id: objectId("osanfoisadnfoisadnfoi")
+          title: cheese
+          description: mmmm cheese
+          code: CHSS
+          price: 9999
+          stock: 0
+          catogery: objectId("fh2q9hfewhfwefqfe")
+          thumbnail: 'https://dodo.ac/np/images/5/58/Study_Chair_%28Natural_-_Yellow%29_NH_Icon.png'
+          visible: false
+          owner: nobody
+        totalDocs: 17
+        limit: 10
+        totalPages: 2
+        page: 1
+        pagingCounter: 1
+        hasPrevPage: false
+        hasNextPage: true
+        prevPage: null
+        nextPage: 2
+        prevLink: ''
+        nextLink: 'http://localhost:3000/api/products/?page=2'
+        isValid: true
+
+    PostEdit_product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id in case of delete request or searching for the item to update
+        title:
+          type: string
+          description: Updated or New title for the item
+        description:
+          type: string
+          description: Updated or new information for the item
+        owner:
+          type: string
+          description: Updated or new information of seller of item
+        code:
+          type: string
+          description: Updated or new code for the item
+        price:
+          type: number
+          description: Updated or new price for the item
+        stock:
+          type: number
+          description: Updated or new amount of items in the database
+        category:
+          type: string
+          description: Current or updated category of the item in the database
+        thumbnail:
+          type: string
+          description: Link to an updated or current icon for the item.
+      example:
+        _id: objectId("osanfoisadnfoisadnfoi")
+        title: NEW cheese
+        description: mmmm more cheese
+        code: CHSS2
+        price: 9999
+        stock: 0
+        catogery: objectId("fh2q9hfewhfwefqfe")
+        thumbnail: 'https://dodo.ac/np/images/5/58/Study_Chair_%28Natural_-_Yellow%29_NH_Icon.png'
+        visible: false
+        owner: nobody

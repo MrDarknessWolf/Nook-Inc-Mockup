@@ -1,0 +1,31 @@
+<div style="display: flex; align-items: center;">
+<img src="https://d2j6dbq0eux0bg.cloudfront.net/startersite/images/77229501/1657691468718.jpg" width="150"/>
+
+<h1>✨The premium program✨</h1>
+</div>
+    <p>UID:{{user._id}}</p>
+    <p>Wellcome {{user.name}}, here you can switch your profile for a premium profile ✨
+
+{{#if premium}}
+        <br>
+        <br>You are part of the Premium program✨
+        <form id="leave_prem" action="/api/users/premium/{{user._id}}" method="post">
+        <button type="submit" id="leave prem">Leave Premium</button>
+    </form>
+{{else}}
+        <br>By Joining this program you will be able to publish and sell your own products
+        <form id="join_perm" action="/api/users/premium/{{user._id}}" method="post">
+            <button type="submit" id="join prem">Join Premium</button>
+        </form>
+</p>
+{{/if}}
+    </p>
+    <br>
+    <form id="go back" action="/api/users/current" method="get">
+            <button type="submit" id="back_btn">Go Back</button>
+    </form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/index.js"></script>
+<link rel="stylesheet" href="/css/styles.css">

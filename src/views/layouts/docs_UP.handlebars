@@ -1,0 +1,31 @@
+<div style="display: flex; align-items: center;">
+<img src="https://d2j6dbq0eux0bg.cloudfront.net/startersite/images/77229501/1657691468718.jpg" width="150"/>
+
+<h2 style="margin-left: 15px;">User Profile</h2>
+</div>
+
+    <h2>File upload</h2>
+    <p>Here you can upload the files for premium check out: </p>
+     <div class="col-md-6">
+    <form action="/api/users/{{uid}}/documents" method="POST" enctype="multipart/form-data">
+        Upload ID document: </br><input type="file" name="ID"></br></input></br>
+        Upload Residence proof: </br><input type="file" name="RESIDENCE"></br></input></br>
+        Upload Bank account extract: </br><input type="file" name="BANK_PROFF"></br></input></br>
+        Upload a profile pic: </br><input type="file"  multiple accept="image/*" name="PROFILE_PIC" ></br></input></br>
+        </br>
+        <button type="submit">Upload </button>
+
+    </form>
+    
+
+<p>-------------------------------------------</p>
+    <form id="go back" action="/api/users/current" method="get">
+            <button type="submit" id="back_btn">Go Back</button>
+    </form>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/index.js"></script>
+<link rel="stylesheet" href="/css/styles.css">
